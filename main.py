@@ -25,7 +25,7 @@ class Algorithm:
             self.reproduce()
             self.evaluate()
             self.population = self.population[:-int(self.POP_SIZE/2)]
-            print(self.population)
+            print(self.population[0])
 
     def evaluate(self):
         self.population.sort(key=sum)
@@ -39,8 +39,8 @@ class Algorithm:
 
     def reproduce(self):
         for _ in range(int(self.POP_SIZE/2)):
-            p1 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1,self.POP_SIZE/2))]
-            p2 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1,self.POP_SIZE/2))]
+            p1 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
+            p2 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
             new = []
             for i in range(len(self.VALUES)):
                 elem = p1[i] if random.randint(0,1) == 1 else p2[i]
@@ -57,5 +57,6 @@ class Algorithm:
                 speciemen[mutation_idx] = 0
         return speciemen
 
+
 a = Algorithm(50)
-a.run(500)
+a.run(1000)
