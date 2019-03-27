@@ -5,7 +5,6 @@ import sys
 class OtherAlgorithm:
 
     def __init__(self):
-        if len(sys.argv) > 1:
             self.C = int(sys.argv[1])
             self.VALUES = [int(x) for x in sys.argv[2:]]
 
@@ -21,13 +20,13 @@ class OtherAlgorithm:
 
 
 class Algorithm:
-    VALUES = [1, 2, 5, 10]
-    POP_SIZE = 100
+    POP_SIZE = 200
     MUTATION_CHANCE = 0.2
     MUTATION_SIZE = 2
 
-    def __init__(self, c):
-        self.C = c
+    def __init__(self):
+        self.C = int(sys.argv[1])
+        self.VALUES = [int(x) for x in sys.argv[2:]]
         self.population = []
         self.generate_population()
 
@@ -77,7 +76,7 @@ class Algorithm:
         return specimen
 
 
-a = Algorithm(53)
-a.run(500)
+a = Algorithm()
+a.run(1000)
 b = OtherAlgorithm()
 b.run()
