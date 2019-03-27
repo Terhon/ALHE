@@ -1,4 +1,23 @@
 import random
+import sys
+
+
+class OtherAlgorithm:
+
+    def __init__(self):
+        if len(sys.argv) > 1:
+            self.C = int(sys.argv[1])
+            self.VALUES = [int(x) for x in sys.argv[2:]]
+
+    def run(self):
+        self.VALUES = sorted(self.VALUES, reverse=True)
+        elem = []
+        for x in self.VALUES:
+            count = int(self.C / x)
+            self.C -= x * count
+            elem.append(count)
+        elem.reverse()
+        print(elem)
 
 
 class Algorithm:
@@ -47,16 +66,18 @@ class Algorithm:
                 new.append(elem)
             self.population.append(self.mutate(new))
 
-    def mutate(self, speciemen):
+    def mutate(self, specimen):
         if random.random() < self.MUTATION_CHANCE:
             mutation = random.randint(1, self.MUTATION_SIZE)
             mutation *= -random.randint(0,1)
             mutation_idx = random.randint(0, len(self.VALUES) - 1)
-            speciemen[mutation_idx] += mutation
-            if speciemen[mutation_idx] < 0:
-                speciemen[mutation_idx] = 0
-        return speciemen
+            specimen[mutation_idx] += mutation
+            if specimen[mutation_idx] < 0:
+                specimen[mutation_idx] = 0
+        return specimen
 
 
-a = Algorithm(50)
-a.run(1000)
+a = Algorithm(53)
+a.run(500)
+b = OtherAlgorithm()
+b.run()
