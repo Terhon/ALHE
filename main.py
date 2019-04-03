@@ -1,5 +1,4 @@
 import random
-import time
 import matplotlib.pyplot as plt
 
 
@@ -18,7 +17,6 @@ class OtherAlgorithm:
             elem.append(count)
         elem.reverse()
         return elem
-        print(elem)
 
 
 class Algorithm:
@@ -89,16 +87,20 @@ class Test:
     def __init__(self):
         self.TEST = 1
 
-    def test_case_population(self):
+    def test_all(self, iterations):
+        self.test_case_population(iterations)
+        self.test_case_mutation_chance(iterations)
+        self.test_case_mutation_size(iterations)
+
+    def test_case_population(self, iterations):
         for pop_size in range(50, 500, 50):
             correct = 0
-            iterations = 20
             for _ in range(iterations):
                 change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
+                correct_solution = a.run()
                 b = Algorithm(change, [1, 2, 5, 10], pop_size, 0.2, 2)
-                correct_solution = b.run(50)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
             print(correct)
@@ -106,16 +108,15 @@ class Test:
             self.axisY.append(correct/iterations)
         self.show_plot("population_size", "correct")
 
-    def test_case_mutation_chance(self):
+    def test_case_mutation_chance(self, iterations):
         for mutation_chance in range(1, 10, 1):
             correct = 0
-            iterations = 20
             for _ in range(iterations):
                 change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
-                b = Algorithm(change, [1, 2, 5, 10], 100, mutation_chance/10, 2)
-                correct_solution = b.run(50)
+                correct_solution = a.run()
+                b = Algorithm(change, [1, 2, 5, 10], 100, mutation_chance, 2)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
             print(correct)
@@ -123,16 +124,15 @@ class Test:
             self.axisY.append(correct/iterations)
         self.show_plot("mutation_chance", "correct")
 
-    def test_case_mutation_size(self):
+    def test_case_mutation_size(self, iterations):
         for mutation_size in range(1, 4, 1):
             correct = 0
-            iterations = 20
             for _ in range(iterations):
                 change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
+                correct_solution = a.run()
                 b = Algorithm(change, [1, 2, 5, 10], 100, 0.2, mutation_size)
-                correct_solution = b.run(50)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
             print(correct)
@@ -150,9 +150,4 @@ class Test:
 
 
 test = Test()
-test.test_case_population()
-
-
-# plt.plot([1, 2, 3])
-# plt.ylabel('time')
-# plt.show()
+test.test_all(100)
