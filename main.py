@@ -1,12 +1,13 @@
 import random
-import sys
+import time
+import matplotlib.pyplot as plt
 
 
 class OtherAlgorithm:
 
-    def __init__(self):
-            self.C = int(sys.argv[1])
-            self.VALUES = [int(x) for x in sys.argv[2:]]
+    def __init__(self, change, denominations):
+            self.C = change
+            self.VALUES = denominations
 
     def run(self):
         self.VALUES = sorted(self.VALUES, reverse=True)
@@ -16,6 +17,7 @@ class OtherAlgorithm:
             self.C -= x * count
             elem.append(count)
         elem.reverse()
+        return elem
         print(elem)
 
 
@@ -24,9 +26,12 @@ class Algorithm:
     MUTATION_CHANCE = 0.2
     MUTATION_SIZE = 2
 
-    def __init__(self):
-        self.C = int(sys.argv[1])
-        self.VALUES = [int(x) for x in sys.argv[2:]]
+    def __init__(self, change, denominations, pop_size, mutation_chance, mutation_size):
+        self.C = change
+        self.VALUES = denominations
+        self.POP_SIZE = pop_size
+        self.MUTATION_CHANCE = mutation_chance
+        self.MUTATION_SIZE = mutation_size
         self.population = []
         self.generate_population()
 
@@ -43,7 +48,8 @@ class Algorithm:
             self.reproduce()
             self.evaluate()
             self.population = self.population[:-int(self.POP_SIZE/2)]
-            print(self.population[0])
+        print(self.population[0])
+        return self.population[0]
 
     def evaluate(self):
         self.population.sort(key=sum)
@@ -57,8 +63,8 @@ class Algorithm:
 
     def reproduce(self):
         for _ in range(int(self.POP_SIZE/2)):
-            p1 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
-            p2 = self.population[self.POP_SIZE - int(random.triangular(0,self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
+            p1 = self.population[self.POP_SIZE - int(random.triangular(0, self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
+            p2 = self.population[self.POP_SIZE - int(random.triangular(0, self.POP_SIZE - 1, self.POP_SIZE/2)) - 1]
             new = []
             for i in range(len(self.VALUES)):
                 elem = p1[i] if random.randint(0,1) == 1 else p2[i]
@@ -68,7 +74,7 @@ class Algorithm:
     def mutate(self, specimen):
         if random.random() < self.MUTATION_CHANCE:
             mutation = random.randint(1, self.MUTATION_SIZE)
-            mutation *= -random.randint(0,1)
+            mutation *= random.choice([1, -1])
             mutation_idx = random.randint(0, len(self.VALUES) - 1)
             specimen[mutation_idx] += mutation
             if specimen[mutation_idx] < 0:
@@ -76,7 +82,77 @@ class Algorithm:
         return specimen
 
 
-a = Algorithm()
-a.run(1000)
-b = OtherAlgorithm()
-b.run()
+class Test:
+    axisX = []
+    axisY = []
+
+    def __init__(self):
+        self.TEST = 1
+
+    def test_case_population(self):
+        for pop_size in range(50, 500, 50):
+            correct = 0
+            iterations = 20
+            for _ in range(iterations):
+                change = 50
+                a = OtherAlgorithm(change, [1, 2, 5, 10])
+                solution = a.run()
+                b = Algorithm(change, [1, 2, 5, 10], pop_size, 0.2, 2)
+                correct_solution = b.run(50)
+                if solution == correct_solution:
+                    correct += 1
+            print(correct)
+            self.axisX.append(pop_size)
+            self.axisY.append(correct/iterations)
+        self.show_plot("population_size", "correct")
+
+    def test_case_mutation_chance(self):
+        for mutation_chance in range(1, 10, 1):
+            correct = 0
+            iterations = 20
+            for _ in range(iterations):
+                change = 50
+                a = OtherAlgorithm(change, [1, 2, 5, 10])
+                solution = a.run()
+                b = Algorithm(change, [1, 2, 5, 10], 100, mutation_chance/10, 2)
+                correct_solution = b.run(50)
+                if solution == correct_solution:
+                    correct += 1
+            print(correct)
+            self.axisX.append(mutation_chance)
+            self.axisY.append(correct/iterations)
+        self.show_plot("mutation_chance", "correct")
+
+    def test_case_mutation_size(self):
+        for mutation_size in range(1, 4, 1):
+            correct = 0
+            iterations = 20
+            for _ in range(iterations):
+                change = 50
+                a = OtherAlgorithm(change, [1, 2, 5, 10])
+                solution = a.run()
+                b = Algorithm(change, [1, 2, 5, 10], 100, 0.2, mutation_size)
+                correct_solution = b.run(50)
+                if solution == correct_solution:
+                    correct += 1
+            print(correct)
+            self.axisX.append(mutation_size)
+            self.axisY.append(correct/iterations)
+        self.show_plot("mutation_size", "correct")
+
+    def show_plot(self, label_x, label_y):
+        plt.xlabel(label_x)
+        plt.ylabel(label_y)
+        plt.plot(self.axisX, self.axisY)
+        plt.show()
+        self.axisX = []
+        self.axisY = []
+
+
+test = Test()
+test.test_case_population()
+
+
+# plt.plot([1, 2, 3])
+# plt.ylabel('time')
+# plt.show()
