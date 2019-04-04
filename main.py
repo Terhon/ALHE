@@ -147,6 +147,36 @@ class Test:
         plt.show()
         self.axisX = []
         self.axisY = []
+        
+        
+class Interface:
+    change = 50
+    denominations = []
+    pop_size = 200
+    mutation_chance = 0.2
+    mutation_size = 2
+    iterations = 50
+
+    def __init__(self):
+        self.prompt()
+
+    def prompt(self):
+        self.change = int(input("Enter change: "))
+        self.denominations = [int(x) for x in input("Enter list of denominations (separated by space): ").split()]
+        self.pop_size = int(input("Enter initial population: "))
+        self.mutation_chance = float(input("Enter mutation chance: "))
+        self.mutation_size = int(input("Enter mutation size: "))
+        self.iterations = int(input("Enter number of iterations: "))
+
+    def run(self):
+        algorithm = Algorithm(self.change, self.denominations, self.pop_size, self.mutation_chance, self.mutation_size)
+        other_algorithm = OtherAlgorithm(self.change, self.denominations)
+        print("Evolutionary output: ", algorithm.run(self.iterations))
+        print("Optimal output: ", other_algorithm.run())
+
+
+interface = Interface()
+interface.run()
 
 
 test = Test()
