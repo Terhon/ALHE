@@ -46,7 +46,6 @@ class Algorithm:
             self.reproduce()
             self.evaluate()
             self.population = self.population[:-int(self.POP_SIZE/2)]
-        print(self.population[0])
         return self.population[0]
 
     def evaluate(self):
@@ -103,7 +102,6 @@ class Test:
                 solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
-            print(correct)
             self.axisX.append(pop_size)
             self.axisY.append(correct/iterations)
         self.show_plot("population_size", "correct")
@@ -119,7 +117,6 @@ class Test:
                 solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
-            print(correct)
             self.axisX.append(mutation_chance)
             self.axisY.append(correct/iterations)
         self.show_plot("mutation_chance", "correct")
@@ -135,7 +132,6 @@ class Test:
                 solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
-            print(correct)
             self.axisX.append(mutation_size)
             self.axisY.append(correct/iterations)
         self.show_plot("mutation_size", "correct")
@@ -179,5 +175,5 @@ interface = Interface()
 interface.run()
 
 
-test = Test()
-test.test_all(100)
+# test = Test()
+# test.test_all(100)
