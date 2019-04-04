@@ -46,6 +46,7 @@ class Algorithm:
             self.reproduce()
             self.evaluate()
             self.population = self.population[:-int(self.POP_SIZE/2)]
+        print(self.population[0])
         return self.population[0]
 
     def evaluate(self):
@@ -86,53 +87,55 @@ class Test:
     def __init__(self):
         self.TEST = 1
 
-    def test_case_population(self):
+    def test_all(self, iterations):
+        self.test_case_population(iterations)
+        self.test_case_mutation_chance(iterations)
+        self.test_case_mutation_size(iterations)
+
+    def test_case_population(self, iterations):
         for pop_size in range(50, 500, 50):
-            print(pop_size)
             correct = 0
-            iterations = 200
             for _ in range(iterations):
                 change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
+                correct_solution = a.run()
                 b = Algorithm(change, [1, 2, 5, 10], pop_size, 0.2, 2)
-                correct_solution = b.run(500)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
+            print(correct)
             self.axisX.append(pop_size)
             self.axisY.append(correct/iterations)
         self.show_plot("population_size", "correct")
 
-    def test_case_mutation_chance(self):
+    def test_case_mutation_chance(self, iterations):
         for mutation_chance in range(1, 10, 1):
-            print(mutation_chance/10)
             correct = 0
-            iterations = 200
             for _ in range(iterations):
                 change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
-                b = Algorithm(change, [1, 2, 5, 10], 200, mutation_chance/10, 2)
-                correct_solution = b.run(50)
+                correct_solution = a.run()
+                b = Algorithm(change, [1, 2, 5, 10], 100, mutation_chance, 2)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
-            self.axisX.append(mutation_chance/10)
+            print(correct)
+            self.axisX.append(mutation_chance)
             self.axisY.append(correct/iterations)
         self.show_plot("mutation_chance", "correct")
 
-    def test_case_mutation_size(self):
+    def test_case_mutation_size(self, iterations):
         for mutation_size in range(1, 4, 1):
-            print(mutation_size)
             correct = 0
-            iterations = 200
             for _ in range(iterations):
-                change = 49
+                change = 50
                 a = OtherAlgorithm(change, [1, 2, 5, 10])
-                solution = a.run()
+                correct_solution = a.run()
                 b = Algorithm(change, [1, 2, 5, 10], 100, 0.2, mutation_size)
-                correct_solution = b.run(500)
+                solution = b.run(50)
                 if solution == correct_solution:
                     correct += 1
+            print(correct)
             self.axisX.append(mutation_size)
             self.axisY.append(correct/iterations)
         self.show_plot("mutation_size", "correct")
@@ -141,39 +144,10 @@ class Test:
         plt.xlabel(label_x)
         plt.ylabel(label_y)
         plt.plot(self.axisX, self.axisY)
-        plt.savefig("plot.png")
         plt.show()
         self.axisX = []
         self.axisY = []
 
 
-class Interface:
-    change = 50
-    denominations = []
-    pop_size = 200
-    mutation_chance = 0.2
-    mutation_size = 2
-    iterations = 50
-
-    def __init__(self):
-        self.prompt()
-
-    def prompt(self):
-        self.change = int(input("Enter change: "))
-        self.denominations = [int(x) for x in input("Enter list of denominations (separated by space): ").split()]
-        self.pop_size = int(input("Enter initial population: "))
-        self.mutation_chance = float(input("Enter mutation chance: "))
-        self.mutation_size = int(input("Enter mutation size: "))
-        self.iterations = int(input("Enter number of iterations: "))
-
-    def run(self):
-        algorithm = Algorithm(self.change, self.denominations, self.pop_size, self.mutation_chance, self.mutation_size)
-        other_algorithm = OtherAlgorithm(self.change, self.denominations)
-        print("Evolutionary output: ", algorithm.run(self.iterations))
-        print("Optimal output: ", other_algorithm.run())
-
-
-interface = Interface()
-interface.run()
-# test = Test()
-# test.test_case_mutation_chance()
+test = Test()
+test.test_all(100)
